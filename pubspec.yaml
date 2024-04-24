@@ -1,34 +1,27 @@
 name: dio_oidc_interceptor
-description: "Intercepteur OpenId pour les appels http avec la librairie Dio"
-version: 0.0.1
-homepage: https://listo.pro
-repository: https://github.com/Listo-Paye/dio_oidc_interceptor
-
-platforms:
-  android:
-  ios:
-  linux:
-  macos:
-  web:
-  windows:
+description: "Dio interceptor for OpenID Connect"
+version: 0.0.1+1
+homepage: https://github.com/Listo-Paye/dio_oidc_interceptor
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=3.10.5"
+  sdk: '>=3.3.3 <4.0.0'
+  flutter: ">=1.17.0"
 
 dependencies:
+  clock: ^1.1.1
+  dio: ^5.4.3+1
   flutter:
     sdk: flutter
+  http_mock_adapter: ^0.6.1
+  localstorage: ^5.0.0
   openid_client: ^0.4.8
-  dio: ^5.4.0
-  localstorage: ^4.0.1+4
-  url_launcher: ^6.2.4
+  universal_platform: ^1.0.0+1
+  url_launcher: ^6.2.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
-  http_mock_adapter: ^0.6.1
+  flutter_lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

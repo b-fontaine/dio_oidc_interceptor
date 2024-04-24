@@ -1,39 +1,67 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Flutter OIDC Interceptor for Dio
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+A Flutter Dio Interceptor for OpenID Connect (OIDC) authentication.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+## Getting Started
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Add package to your `pubspec.yaml`:
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+```shell
+flutter pub add dio_oidc_interceptor
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+import 'package:dio/dio.dart';
+import 'package:dio_oidc_interceptor/dio_oidc_interceptor.dart';
+
+void main() async {
+  final dio = Dio();
+  final interceptor = OidcInterceptor(
+        configuration: OpenIdConfiguration(
+      clientId: 'your-client-id',
+      clientSecret: 'your-client-secret',
+      uri: 'https://your-oidc-provider.com',
+      scopes: ['openid', 'profile', 'email'],
+    ));
+  dio.interceptors.add(interceptor);
+  
+  await dio.login();
+  final response = await dio.get('https://api.example.com');
+}
 ```
 
-## Additional information
+### Use with Retrofit
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
+
+part 'backend_client.g.dart';
+
+@RestApi(baseUrl: 'https://website/api/version/')
+abstract class BackendClient {
+  factory BackendClient(Dio dio, {String baseUrl}) = _BackendClient;
+}
+
+class Backend {
+  late final Dio _dio;
+  late final BackendClient _backendClient;
+  final interceptor = OidcInterceptor(
+      configuration: OpenIdConfiguration(
+        clientId: 'your-client-id',
+        clientSecret: 'your-client-secret',
+        uri: 'https://your-oidc-provider.com',
+        scopes: ['openid', 'profile', 'email'],
+      ));
+
+  Backend(Authentication auth, Configuration configuration) {
+    _dio = Dio()..interceptors.add(interceptor);
+    _backendClient = BackendClient(_dio, baseUrl: 'https://website/api/version/');
+  }
+
+  Dio get dio => _dio;
+  BackendClient get backendClient => _backendClient;
+}
+```
