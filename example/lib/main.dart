@@ -3,11 +3,11 @@ import 'package:dio_oidc_interceptor/dio_oidc_interceptor.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -81,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> checkConnection() async {
     var result = await _openId.isConnected;
+    _dio.close();
     setState(() {
       _isConnected = result;
     });
