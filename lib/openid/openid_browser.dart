@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:openid_client/openid_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future<Credential> authenticate(
+Future<Credential?> authenticate(
   Client client, {
   List<String> scopes = const [],
   Map<String, String>? queryParameters,
@@ -19,8 +19,7 @@ Future<Credential> authenticate(
 
   if (q.containsKey('state') &&
       q.containsKey('code') &&
-      q.containsKey('session_state') &&
-      q.containsKey('iss')) {
+      q.containsKey('session_state')) {
     parameters = AuthorizationCodeParameters(
       code: q['code']!,
       state: q['state']!,
@@ -51,9 +50,7 @@ Future<Credential> authenticate(
   if (!result) {
     throw Exception('Action annulée.');
   }
-  var credential = await flow.callback(q.cast());
-
-  return credential;
+  return null;
 }
 
 Future<Credential> authenticateWithAuthorizationCode(
@@ -89,6 +86,10 @@ Future<Credential> authenticateWithAuthorizationCode(
       .join('&');
 
   try {
+    /*final response = await dio.post(
+      'https://corsproxy.io/?${Uri.encodeComponent(client.issuer.metadata.tokenEndpoint.toString())}',
+      data: data,
+    );*/
     final response = await dio.postUri(
       client.issuer.metadata.tokenEndpoint!,
       data: data,

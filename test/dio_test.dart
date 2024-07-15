@@ -30,7 +30,7 @@ void main() async {
         //
         // Or create your own http-request matcher via extending your class from  [HttpRequestMatcher].
         // See -> issue:[124] & pr:[125]
-        matcher: const FullHttpRequestMatcher(),
+        matcher: const FullHttpRequestMatcher(needsExactBody: true),
       );
     });
 
@@ -41,6 +41,10 @@ void main() async {
         route,
         (server) => server.reply(200, null),
       );
+
+      dioAdapter.onPost(route, (server) {
+        return server.reply(200, null);
+      }, data: {'key': 'value'});
 
       response = await dio.get(route);
 

@@ -3,7 +3,7 @@ import 'package:openid_client/openid_client_io.dart' as io;
 import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future<Credential> authenticate(
+Future<Credential?> authenticate(
   Client client, {
   List<String> scopes = const [],
   Map<String, String>? queryParameters,

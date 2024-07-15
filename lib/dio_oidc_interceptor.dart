@@ -22,7 +22,7 @@ class OpenIdConfiguration {
       required this.scopes});
 }
 
-class OidcInterceptor extends Interceptor {
+class OpenId extends Interceptor {
   final OpenIdConfiguration configuration;
   final Dio? dio;
   late final Clock _clock;
@@ -45,7 +45,7 @@ class OidcInterceptor extends Interceptor {
     localStorage.setItem(key, value);
   }
 
-  OidcInterceptor({
+  OpenId({
     required this.configuration,
     this.dio,
   }) {
@@ -92,16 +92,18 @@ class OidcInterceptor extends Interceptor {
     } else {
       credential = client.createCredential(refreshToken: refreshToken);
     }
-    var tokens = await credential.getTokenResponse();
-    if (tokens.accessToken == null) {
-      throw Exception("Authentication failed !");
-    }
+    if (credential != null) {
+      var tokens = await credential.getTokenResponse();
+      if (tokens.accessToken == null) {
+        throw Exception("Authentication failed !");
+      }
 
-    await setStorageValue(_accessTokenField, tokens.accessToken ?? "");
-    await setStorageValue(_refrshTokenField, tokens.refreshToken ?? "");
-    await setStorageValue(_tokenTypeField, tokens.tokenType ?? "Bearer");
-    await setStorageValue(
-        _expireTokenField, tokens.expiresAt?.toIso8601String() ?? "");
+      await setStorageValue(_accessTokenField, tokens.accessToken ?? "");
+      await setStorageValue(_refrshTokenField, tokens.refreshToken ?? "");
+      await setStorageValue(_tokenTypeField, tokens.tokenType ?? "Bearer");
+      await setStorageValue(
+          _expireTokenField, tokens.expiresAt?.toIso8601String() ?? "");
+    }
   }
 
   @override
