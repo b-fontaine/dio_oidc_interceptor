@@ -3,6 +3,10 @@ import 'package:openid_client/openid_client_io.dart' as io;
 import 'package:universal_platform/universal_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+Future<Credential> createCredentialWithRefreshToken(Client client, String refreshToken) async {
+  return client.createCredential(refreshToken: refreshToken);
+}
+
 Future<Credential?> authenticate(
   Client client, {
   List<String> scopes = const [],
