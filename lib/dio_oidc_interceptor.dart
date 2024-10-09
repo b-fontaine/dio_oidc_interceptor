@@ -30,6 +30,7 @@ class OpenId extends Interceptor {
 
   final String _accessTokenField = "access_token";
   final String _refrshTokenField = "refresh_token";
+  final String _idTokenField = "id_token";
   final String _tokenTypeField = "token_type";
   final String _expireTokenField = "expire_at";
 
@@ -68,14 +69,15 @@ class OpenId extends Interceptor {
 
   Future<void> logout() async {
     var accessToken = await getStorageValue(_accessTokenField);
+    var idToken = await getStorageValue(_idTokenField);
     if ((accessToken ?? "").isEmpty) {
       return;
     }
     var client = await getClient();
-    var credential = client.createCredential(accessToken: accessToken);
+    var credential = client.createCredential(accessToken: accessToken, idToken: idToken);
     var logoutUrl = credential.generateLogoutUrl();
     if (logoutUrl != null && await canLaunchUrl(logoutUrl)) {
-      await launchUrl(logoutUrl);
+      await launchUrl(logoutUrl, webOnlyWindowName: '_self');
       localStorage.clear();
     }
   }
@@ -87,11 +89,13 @@ class OpenId extends Interceptor {
     var client = await getClient();
     var refreshToken = await getStorageValue(_refrshTokenField);
     Credential? credential;
+    print('refreshToken == null: ${refreshToken == null}');
     if (refreshToken == null) {
-      credential = await authenticate(client, scopes: configuration.scopes);
+      credential = await authenticate(client, scopes: configuration.scopes, queryParameters: queryParameters);
     } else {
       credential = client.createCredential(refreshToken: refreshToken);
     }
+    print('credential == null: ${credential == null}');
     if (credential != null) {
       var tokens = await credential.getTokenResponse();
       if (tokens.accessToken == null) {
@@ -100,6 +104,8 @@ class OpenId extends Interceptor {
 
       await setStorageValue(_accessTokenField, tokens.accessToken ?? "");
       await setStorageValue(_refrshTokenField, tokens.refreshToken ?? "");
+      await setStorageValue(
+          _idTokenField, tokens.idToken.toCompactSerialization() ?? "");
       await setStorageValue(_tokenTypeField, tokens.tokenType ?? "Bearer");
       await setStorageValue(
           _expireTokenField, tokens.expiresAt?.toIso8601String() ?? "");
