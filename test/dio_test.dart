@@ -1,12 +1,69 @@
 import 'package:dio/dio.dart';
+import 'package:dio_oidc_interceptor/dio_oidc_interceptor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
+import 'dart:convert';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
+
+import 'stubs/local_storage_stub.dart';
+import 'stubs/openid_stub.dart';
+import 'stubs/url_launcher_platform_stub.dart';
 
 void main() async {
   late Dio dio;
   late DioAdapter dioAdapter;
 
   Response<dynamic> response;
+
+  test('Logout, should clear local storage and launch logout URL', () async {
+    // Stubber l'appel HTTP
+    final mockHttpClient = MockClient((request) async {
+      if (request.url.toString() ==
+          'https://connect.listo.pro/realms/ante-prod/.well-known/openid-configuration') {
+        final response = {
+          'end_session_endpoint': 'https://logout.url/logout',
+        };
+        return http.Response(jsonEncode(response), 200);
+      }
+      return http.Response('Not Found', 404);
+    });
+
+    // Fournir une implémentation factice pour localStorage
+    final fakeLocalStorage = LocalStorageStub();
+
+    // Remplacer UrlLauncherPlatform.instance par une implémentation factice
+    final fakeUrlLauncherPlatform = UrlLauncherPlatformStub();
+    UrlLauncherPlatform.instance = fakeUrlLauncherPlatform;
+
+    // Créer une instance de OpenId en utilisant les stubs
+    final openId = OpenIdStub(
+      configuration: OpenIdConfiguration(
+        clientId: 'flutter-connect',
+        clientSecret: 'your_client_secret',
+        uri: Uri.parse(
+            'https://connect.listo.pro/realms/ante-prod/.well-known/openid-configuration'),
+        scopes: ['openid', 'profile', 'email'],
+      ),
+      httpClient: mockHttpClient,
+      localStorage: fakeLocalStorage,
+    );
+
+    // Appeler la méthode logout
+    await openId.logout();
+
+    // Vérifier que localStorage.clear() a été appelé
+    expect(fakeLocalStorage.clearCalled, isTrue);
+
+    // Vérifier que launchUrl a été appelé avec l'URL attendue
+    expect(fakeUrlLauncherPlatform.launchUrlCalled, isTrue);
+    expect(
+      fakeUrlLauncherPlatform.launchedUrl,
+      'https://logout.url/logout?post_logout_redirect_uri=http%3A%2F%2Flocalhost:6900%2F&client_id=flutter-connect',
+    );
+  });
 
   group('Basic', () {
     const baseUrl = 'https://example.com';

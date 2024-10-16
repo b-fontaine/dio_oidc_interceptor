@@ -1,10 +1,13 @@
 library dio_oidc_interceptor;
 
+import 'dart:convert';
+
 import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:openid_client/openid_client.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 import 'openid/openid_io.dart'
     if (dart.library.html) 'openid/openid_browser.dart';
@@ -67,16 +70,25 @@ class OpenId extends Interceptor {
   }
 
   Future<void> logout() async {
-    var accessToken = await getStorageValue(_accessTokenField);
-    if ((accessToken ?? "").isEmpty) {
-      return;
-    }
-    var client = await getClient();
-    var credential = client.createCredential(accessToken: accessToken);
-    var logoutUrl = credential.generateLogoutUrl();
-    if (logoutUrl != null && await canLaunchUrl(logoutUrl)) {
-      await launchUrl(logoutUrl);
-      localStorage.clear();
+    final url = Uri.parse(
+        "https://connect.listo.pro/realms/ante-prod/.well-known/openid-configuration");
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        var logoutUri = data['end_session_endpoint'];
+        final Uri _logoutUrl = Uri.parse(
+            '$logoutUri?post_logout_redirect_uri=http%3A%2F%2Flocalhost:6900%2F&client_id=flutter-connect');
+        localStorage.clear();
+        if (logoutUri != null && await canLaunchUrl(_logoutUrl)) {
+          await launchUrl(_logoutUrl, webOnlyWindowName: '_self');
+        }
+      } else {
+        throw Exception('Erreur lors de la requête: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Exception rencontrée: $e');
     }
   }
 
@@ -87,11 +99,14 @@ class OpenId extends Interceptor {
     var client = await getClient();
     var refreshToken = await getStorageValue(_refrshTokenField);
     Credential? credential;
+    print('refreshToken == null: ${refreshToken == null}');
     if (refreshToken == null) {
-      credential = await authenticate(client, scopes: configuration.scopes);
+      credential = await authenticate(client,
+          scopes: configuration.scopes, queryParameters: queryParameters);
     } else {
       credential = client.createCredential(refreshToken: refreshToken);
     }
+    print('credential == null: ${credential == null}');
     if (credential != null) {
       var tokens = await credential.getTokenResponse();
       if (tokens.accessToken == null) {
