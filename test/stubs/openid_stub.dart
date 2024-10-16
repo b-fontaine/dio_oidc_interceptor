@@ -1,3 +1,4 @@
+// ignore_for_file: depend_on_referenced_packages
 import 'dart:convert';
 
 import 'package:dio_oidc_interceptor/dio_oidc_interceptor.dart';
@@ -27,14 +28,14 @@ class OpenIdStub extends OpenId {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         var logoutUri = data['end_session_endpoint'];
-        final Uri _logoutUrl = Uri.parse(
+        final Uri logoutUrl = Uri.parse(
             '$logoutUri?post_logout_redirect_uri=http%3A%2F%2Flocalhost:6900%2F&client_id=flutter-connect');
         localStorage.clear();
         if (logoutUri != null &&
             await UrlLauncherPlatform.instance
-                .canLaunch(_logoutUrl.toString())) {
+                .canLaunch(logoutUrl.toString())) {
           await UrlLauncherPlatform.instance.launch(
-            _logoutUrl.toString(),
+            logoutUrl.toString(),
             useSafariVC: false,
             useWebView: false,
             enableJavaScript: false,

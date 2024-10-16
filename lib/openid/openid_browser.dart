@@ -14,7 +14,6 @@ Future<Credential?> authenticate(
 }) async {
   var uri = Uri.parse(window.location.href);
   var q = queryParameters ?? uri.queryParameters;
-  print('q: $q');
 
   AuthorizationCodeParameters? parameters;
 
@@ -110,7 +109,6 @@ Future<Credential> authenticateWithAuthorizationCode(
       idToken: token.idToken.toCompactSerialization(),
     );
   } catch (e) {
-    print('e: $e');
     throw Exception('Failed to get token: $e');
   }
 }

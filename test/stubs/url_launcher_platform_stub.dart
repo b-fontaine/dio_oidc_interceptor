@@ -1,5 +1,6 @@
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+// ignore_for_file: depend_on_referenced_packages
 import 'package:url_launcher_platform_interface/link.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 // Implémentation factice de UrlLauncherPlatform
 class UrlLauncherPlatformStub extends UrlLauncherPlatform {
@@ -13,15 +14,15 @@ class UrlLauncherPlatformStub extends UrlLauncherPlatform {
 
   @override
   Future<bool> launch(
-      String url, {
-        required bool useSafariVC,
-        required bool useWebView,
-        required bool enableJavaScript,
-        required bool enableDomStorage,
-        required bool universalLinksOnly,
-        required Map<String, String> headers,
-        String? webOnlyWindowName,
-      }) async {
+    String url, {
+    required bool useSafariVC,
+    required bool useWebView,
+    required bool enableJavaScript,
+    required bool enableDomStorage,
+    required bool universalLinksOnly,
+    required Map<String, String> headers,
+    String? webOnlyWindowName,
+  }) async {
     launchUrlCalled = true;
     launchedUrl = url;
     return true;

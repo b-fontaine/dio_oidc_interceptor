@@ -1,12 +1,13 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:dio_oidc_interceptor/dio_oidc_interceptor.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http_mock_adapter/http_mock_adapter.dart';
-import 'dart:convert';
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
+// ignore_for_file: depend_on_referenced_packages
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import 'stubs/local_storage_stub.dart';
 import 'stubs/openid_stub.dart';
