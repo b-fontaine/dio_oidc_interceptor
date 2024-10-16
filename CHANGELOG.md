@@ -1,3 +1,7 @@
+## 1.1.0
+* bug fixes
+* added logout rebuilt
+
 ## 1.0.0
 * bug fixes
 * added tests
