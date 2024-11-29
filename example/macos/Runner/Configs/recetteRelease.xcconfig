@@ -1,0 +1,7 @@
+#include "../../Flutter/recetteRelease.xcconfig"
+#include "Warnings.xcconfig"
+
+FLUTTER_TARGET=lib/main_recette.dart
+ASSET_PREFIX=recette
+BUNDLE_NAME=Recette
+BUNDLE_DISPLAY_NAME=Recette

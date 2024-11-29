@@ -1,0 +1,7 @@
+#include "../../Flutter/preprodDebug.xcconfig"
+#include "Warnings.xcconfig"
+
+FLUTTER_TARGET=lib/main_preprod.dart
+ASSET_PREFIX=preprod
+BUNDLE_NAME=Preprod
+BUNDLE_DISPLAY_NAME=Preprod

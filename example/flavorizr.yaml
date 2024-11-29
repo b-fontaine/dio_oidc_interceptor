@@ -1,0 +1,21 @@
+flavors:
+  prod:
+    app:
+      name: "Production"
+    android:
+      applicationId: "pro.listo.flutter_starter_kit"
+    ios:
+      bundleId: "pro.listo.flutter_starter_kit"
+    macos:
+      bundleId: "pro.listo.flutter_starter_kit"
+  dev:
+    app:
+      name: "Dev"
+    android:
+      applicationId: "pro.listo.flutter_starter_kit.dev"
+    ios:
+      bundleId: "pro.listo.flutter_starter_kit.dev"
+    macos:
+      bundleId: "pro.listo.flutter_starter_kit.dev"
+
+ide: idea

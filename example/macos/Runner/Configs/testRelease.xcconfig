@@ -1,0 +1,7 @@
+#include "../../Flutter/testRelease.xcconfig"
+#include "Warnings.xcconfig"
+
+FLUTTER_TARGET=lib/main_test.dart
+ASSET_PREFIX=test
+BUNDLE_NAME=Test
+BUNDLE_DISPLAY_NAME=Test

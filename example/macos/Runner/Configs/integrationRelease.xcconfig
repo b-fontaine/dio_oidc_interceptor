@@ -1,0 +1,7 @@
+#include "../../Flutter/integrationRelease.xcconfig"
+#include "Warnings.xcconfig"
+
+FLUTTER_TARGET=lib/main_integration.dart
+ASSET_PREFIX=integration
+BUNDLE_NAME=Integration
+BUNDLE_DISPLAY_NAME=Integration
