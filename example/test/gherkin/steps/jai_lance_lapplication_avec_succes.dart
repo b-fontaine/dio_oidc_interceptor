@@ -13,7 +13,7 @@ Future<void> jaiLanceLapplicationAvecSucces(WidgetTester tester) async {
   TestWidgetsFlutterBinding.ensureInitialized();
   await tester.pumpWidget(App());
   await tester.pumpAndSettle();
-  tester.view.physicalSize = const Size(1900, 1200);
+  tester.view.physicalSize = const Size(2100, 1600);
   tester.view.devicePixelRatio = 1;
   tester.view.platformDispatcher.textScaleFactorTestValue = 0.5;
   await tester.pumpAndSettle(const Duration(milliseconds: 500));

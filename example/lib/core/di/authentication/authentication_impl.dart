@@ -8,6 +8,7 @@ import '../di_module.dart';
 
 @dev
 @prod
+@Order(-1)
 @Singleton(as: Authentication)
 class AuthenticationImpl implements Authentication {
   late final OpenId _oAuth;

@@ -9,6 +9,24 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'dio_oidc_interceptor_io.dart'
     if (dart.library.html) 'dio_oidc_interceptor_browser.dart';
 
+/// Configuration for OpenId
+///
+/// [clientId] is the client id of the application
+/// [clientSecret] is the client secret of the application
+/// [uri] is the uri of the OpenId server
+/// [scopes] is the list of scopes to request
+///
+/// Examplefor local Keycloak server:
+/// ```dart
+/// OpenIdConfiguration(
+///  clientId: "example-id",
+///  clientSecret: "example-clientSecret",
+///  uri: Uri.parse("http://localhost:8080/realm/master"),
+///  scopes: ["openid", "profile"],
+///  );
+///  ```
+///
+/// [OpenId] is an interceptor for Dio that handles OpenId authentication
 class OpenIdConfiguration {
   final String clientId;
   final String clientSecret;
@@ -22,6 +40,24 @@ class OpenIdConfiguration {
       required this.scopes});
 }
 
+/// OpenId Interceptor for Dio
+///
+/// [configuration] is the OpenId configuration
+/// [dio] is the Dio instance to use
+///
+/// Example:
+/// ```dart
+/// OpenId(
+///  configuration: OpenIdConfiguration(
+///     clientId: "example-id",
+///     clientSecret: "example-clientSecret",
+///     uri: Uri.parse("http://localhost:8080/realm/master"),
+///     scopes: ["openid", "profile"],
+///   ),
+///  );
+///  ```
+///
+/// [OpenId] is an interceptor for Dio that handles OpenId authentication
 class OpenId extends Interceptor {
   final OpenIdConfiguration configuration;
   final Dio? dio;
@@ -35,12 +71,12 @@ class OpenId extends Interceptor {
 
   Dio get dioInstance => dio ?? Dio();
 
-  Future<String?> getStorageValue(String key) async {
+  Future<String?> _getStorageValue(String key) async {
     await initLocalStorage();
     return localStorage.getItem(key);
   }
 
-  Future<void> setStorageValue(String key, String value) async {
+  Future<void> _setStorageValue(String key, String value) async {
     await initLocalStorage();
     localStorage.setItem(key, value);
   }
@@ -53,6 +89,9 @@ class OpenId extends Interceptor {
     localStorage.removeItem(_expireTokenField);
   }
 
+  /// Constructor for OpenId
+  /// [configuration] is the OpenId configuration
+  /// [dio] is the Dio instance to use
   OpenId({
     required this.configuration,
     this.dio,
@@ -60,9 +99,44 @@ class OpenId extends Interceptor {
     _clock = const Clock();
   }
 
-  Future<bool> get isConnected => _alreadyAuthenticated();
+  /// Check if user is connecter
+  /// Return true if user is connected
+  /// Return false if user is not connected
+  /// Return false if user is connected but token is expired
+  Future<bool> get isConnected async {
+    if (await _alreadyAuthenticated()) {
+      return true;
+    }
+    if (await _getStorageValue(_refrshTokenField) != null) {
+      await _silentLogin();
+    }
+    return await _alreadyAuthenticated();
+  }
 
-  Future<Client> getClient() async {
+  Future<void> _silentLogin() async {
+    var client = await _getClient();
+    var refreshToken = await _getStorageValue(_refrshTokenField);
+    Credential? credential;
+    if (refreshToken != null) {
+      try {
+        credential = client.createCredential(refreshToken: refreshToken);
+      } catch (_) {}
+    }
+    if (credential != null) {
+      var tokens = await credential.getTokenResponse();
+      if (tokens.accessToken == null) {
+        await clearStorageValues();
+      } else {
+        await _setStorageValue(_accessTokenField, tokens.accessToken ?? "");
+        await _setStorageValue(_refrshTokenField, tokens.refreshToken ?? "");
+        await _setStorageValue(_tokenTypeField, tokens.tokenType ?? "Bearer");
+        await _setStorageValue(
+            _expireTokenField, tokens.expiresAt?.toIso8601String() ?? "");
+      }
+    }
+  }
+
+  Future<Client> _getClient() async {
     if (_client == null) {
       var issuer = await Issuer.discover(configuration.uri);
       _client = Client(
@@ -74,8 +148,11 @@ class OpenId extends Interceptor {
     return _client!;
   }
 
+  /// Logout the user
+  ///
+  /// Invalidate the token and clear the storage
   Future<void> logout() async {
-    var accessToken = await getStorageValue(_accessTokenField);
+    var accessToken = await _getStorageValue(_accessTokenField);
     if ((accessToken ?? "").isEmpty) {
       return;
     }
@@ -84,17 +161,31 @@ class OpenId extends Interceptor {
     await launchUrlString(logoutUrl, webOnlyWindowName: "_self");
   }
 
+  /// Login the user
+  ///
+  /// Authenticate the user and store the token in the storage
+  /// [queryParameters] is the query parameters to pass to the authentication if needed
+  ///
+  /// Example:
+  /// ```dart
+  /// await openId.login(queryParameters: {"prompt": "login"});
+  /// ```
+  ///
   Future<void> login({Map<String, String>? queryParameters}) async {
     if (await _alreadyAuthenticated()) {
       return;
     }
-    var client = await getClient();
-    var refreshToken = await getStorageValue(_refrshTokenField);
+    var client = await _getClient();
+    var refreshToken = await _getStorageValue(_refrshTokenField);
     Credential? credential;
-    if (refreshToken == null) {
+    if (refreshToken != null) {
+      try {
+        credential = client.createCredential(refreshToken: refreshToken);
+      } catch (_) {}
+    }
+    if (credential == null) {
+      await clearStorageValues();
       credential = await authenticate(client, scopes: configuration.scopes);
-    } else {
-      credential = client.createCredential(refreshToken: refreshToken);
     }
     if (credential != null) {
       var tokens = await credential.getTokenResponse();
@@ -102,14 +193,18 @@ class OpenId extends Interceptor {
         throw Exception("Authentication failed !");
       }
 
-      await setStorageValue(_accessTokenField, tokens.accessToken ?? "");
-      await setStorageValue(_refrshTokenField, tokens.refreshToken ?? "");
-      await setStorageValue(_tokenTypeField, tokens.tokenType ?? "Bearer");
-      await setStorageValue(
+      await _setStorageValue(_accessTokenField, tokens.accessToken ?? "");
+      await _setStorageValue(_refrshTokenField, tokens.refreshToken ?? "");
+      await _setStorageValue(_tokenTypeField, tokens.tokenType ?? "Bearer");
+      await _setStorageValue(
           _expireTokenField, tokens.expiresAt?.toIso8601String() ?? "");
     }
   }
 
+  /// Executed when an error occurs
+  ///
+  /// If the error is a 401, try to login again
+  /// Else call the error handler
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
     final RequestOptions? opt = err.response?.requestOptions;
@@ -135,36 +230,40 @@ class OpenId extends Interceptor {
   }
 
   Future<bool> _alreadyAuthenticated() async {
-    if (await getStorageValue(_accessTokenField) == null) {
+    if (await _getStorageValue(_accessTokenField) == null) {
       return false;
     }
     final expiresAt =
-        DateTime.tryParse(await getStorageValue(_expireTokenField) ?? "");
+        DateTime.tryParse(await _getStorageValue(_expireTokenField) ?? "");
     if (expiresAt != null && expiresAt.isBefore(_clock.now())) {
       return false;
     }
     return true;
   }
 
-  Future<String?> getAccessToken() async {
-    if (await getStorageValue(_accessTokenField) == null) {
+  Future<String?> _getAccessToken() async {
+    if (await _getStorageValue(_accessTokenField) == null) {
       await login();
     }
 
     final expiresAt =
-        DateTime.tryParse(await getStorageValue(_expireTokenField) ?? "");
+        DateTime.tryParse(await _getStorageValue(_expireTokenField) ?? "");
     if (expiresAt != null && expiresAt.isBefore(_clock.now())) {
       await login();
     }
 
-    return await getStorageValue(_accessTokenField);
+    return await _getStorageValue(_accessTokenField);
   }
 
+  /// Executed before a request
+  ///
+  /// Add the token to the request headers
+  /// Refresh the token if needed
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = await getAccessToken();
-    final tokenType = await getStorageValue(_tokenTypeField) ?? "Bearer";
+    final token = await _getAccessToken();
+    final tokenType = await _getStorageValue(_tokenTypeField) ?? "Bearer";
     if (token != null) {
       options.headers['Authorization'] = '$tokenType $token';
     }

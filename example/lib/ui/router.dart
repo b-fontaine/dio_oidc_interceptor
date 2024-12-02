@@ -4,20 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
+import 'common/common_module.dart';
+
 @singleton
 class AppRouter {
   GoRouter? _goRouter;
   late final ValueNotifier<RoutingConfig> _routingConfiguration;
-  final String _fragment = Uri.base.fragment;
-  Map<String, String> _params =
-      Map.fromEntries(Uri.base.queryParameters.entries);
-
-  Map<String, String> get queryParameters =>
-      _params.isNotEmpty ? _params : _toMap(_fragment);
-
-  set queryParameters(Map<String, String> params) {
-    _params = params;
-  }
 
   AppRouter() {
     _routingConfiguration = ValueNotifier<RoutingConfig>(
@@ -30,15 +22,18 @@ class AppRouter {
             routes: [
               transitionGoRoute(
                 path: '/',
-                builder: (context, state) => Center(child: const Text("En construction")), // Route racine, les autres seront ajoutées par injection de dépendance
+                builder: (context, state) => ScaffoldWithDoc(
+                  title: "welcome",
+                  buttonLabel: "Go to login",
+                  onButtonPressed: () => context.push('/login'),
+                ),
               )
             ],
           )
         ],
       ),
     );
-
-    Uri.base.removeFragment();
+    GoRouter.optionURLReflectsImperativeAPIs = true;
   }
 
   GoRouter initWithRoute(String route) {
@@ -68,14 +63,6 @@ class AppRouter {
 
   void go(String path) {
     goRouter.go(path);
-  }
-
-  Map<String, String> _toMap(String fragment) {
-    var data = fragment
-        .split('&')
-        .map((e) => e.split('='))
-        .map((e) => MapEntry(e.first, e.last));
-    return Map.fromEntries(data);
   }
 
   @disposeMethod

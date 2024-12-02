@@ -1,7 +1,7 @@
 name: dio_oidc_interceptor_example
 description: "Example to learn how using dio_oidc_interceptor."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.2.0
 
 environment:
   sdk: ^3.5.3
@@ -34,7 +34,7 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_markdown: ^0.7.4+3
   flutter_highlighter: ^0.1.1
-  septeo_design_system: ^0.0.3
+  septeo_design_system: ^0.0.4+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,6 +47,10 @@ dev_dependencies:
   bdd_widget_test: ^1.7.4
   freezed: ^2.5.7
   http_mock_adapter: ^0.6.1
+  mocktail_image_network: ^1.2.0
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/markdown/

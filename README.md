@@ -66,6 +66,10 @@ class Backend {
 }
 ```
 
+## Documentation
+- [Login](example/assets/markdown/login_en.md)
+- [API call & Logout](example/assets/markdown/logout_en.md)
+
 # [FR] Intercepteur OIDC Flutter pour Dio
 
 Un intercepteur Dio pour Flutter, dédié à l'authentification OpenID Connect (OIDC).
@@ -133,3 +137,7 @@ class Backend {
   BackendClient get backendClient => _backendClient;
 }
 ```
+
+## Documentation
+- [Login](example/assets/markdown/login_fr.md)
+- [Appel API & Logout](example/assets/markdown/logout_fr.md)

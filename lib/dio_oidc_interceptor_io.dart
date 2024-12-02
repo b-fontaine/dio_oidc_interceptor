@@ -25,10 +25,9 @@ Future<Credential?> authenticate(
   // starts the authentication
   var c = await authenticator.authorize();
 
-  // close the webview when finished
-  if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) {
+  try {
     closeInAppWebView();
-  }
+  } catch (_) {}
 
   return c;
 }

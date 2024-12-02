@@ -300,7 +300,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -796,6 +796,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  mocktail:
+    dependency: transitive
+    description:
+      name: mocktail
+      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
+  mocktail_image_network:
+    dependency: "direct dev"
+    description:
+      name: mocktail_image_network
+      sha256: a1fccbba780343517cfc552e0af2b3834d8bdb8f9f55a746c4d495ed1a8d50d6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   nested:
     dependency: transitive
     description:
@@ -1024,10 +1040,10 @@ packages:
     dependency: "direct main"
     description:
       name: septeo_design_system
-      sha256: "5835310a5e1a8eb41cd89950e58d3f604f2de1d2140714def92e2940e26c8716"
+      sha256: "5d7619665ef5fbfe1a01f6e416091b9f8c62ee4d4a4e78dea7d27ef80c841b43"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4+1"
   shelf:
     dependency: transitive
     description:
