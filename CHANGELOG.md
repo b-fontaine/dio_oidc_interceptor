@@ -1,3 +1,13 @@
+## 1.2.0
+* Rebuild of the package
+  * Better token management
+  * New logout method
+  * Cleanup token method
+  * Specific RefreshToken method
+* Rebuild example project from [Listo Starter Kit](https://github.com/Listo-Paye/flutter_starter_kit)
+  * Test driven code with Gherkin
+  * API calls with Dio & Retrofit (with tests)
+
 ## 1.1.0
 * bug fixes
 * added logout rebuilt

@@ -1,6 +1,6 @@
 name: dio_oidc_interceptor
 description: "Dio interceptor for OpenID Connect"
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/Listo-Paye/dio_oidc_interceptor
 
 environment:
