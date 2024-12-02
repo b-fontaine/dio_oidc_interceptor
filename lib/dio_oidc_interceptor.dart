@@ -1,17 +1,13 @@
 library;
 
-import 'dart:convert';
-
 import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
-// ignore: depend_on_referenced_packages
-import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:openid_client/openid_client.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-import 'openid/openid_io.dart'
-    if (dart.library.html) 'openid/openid_browser.dart';
+import 'dio_oidc_interceptor_io.dart'
+    if (dart.library.html) 'dio_oidc_interceptor_browser.dart';
 
 class OpenIdConfiguration {
   final String clientId;
@@ -49,6 +45,14 @@ class OpenId extends Interceptor {
     localStorage.setItem(key, value);
   }
 
+  Future<void> clearStorageValues() async {
+    await initLocalStorage();
+    localStorage.removeItem(_accessTokenField);
+    localStorage.removeItem(_refrshTokenField);
+    localStorage.removeItem(_tokenTypeField);
+    localStorage.removeItem(_expireTokenField);
+  }
+
   OpenId({
     required this.configuration,
     this.dio,
@@ -71,26 +75,13 @@ class OpenId extends Interceptor {
   }
 
   Future<void> logout() async {
-    final url = Uri.parse(
-        "https://connect.listo.pro/realms/ante-prod/.well-known/openid-configuration");
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        var logoutUri = data['end_session_endpoint'];
-        final Uri logoutUrl = Uri.parse(
-            '$logoutUri?post_logout_redirect_uri=http%3A%2F%2Flocalhost:6900%2F&client_id=flutter-connect');
-        localStorage.clear();
-        if (logoutUri != null && await canLaunchUrl(logoutUrl)) {
-          await launchUrl(logoutUrl, webOnlyWindowName: '_self');
-        }
-      } else {
-        throw Exception('Erreur lors de la requête: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Exception rencontrée: $e');
+    var accessToken = await getStorageValue(_accessTokenField);
+    if ((accessToken ?? "").isEmpty) {
+      return;
     }
+    var logoutUrl = "${configuration.uri}/protocol/openid-connect/logout";
+    await clearStorageValues();
+    await launchUrlString(logoutUrl, webOnlyWindowName: "_self");
   }
 
   Future<void> login({Map<String, String>? queryParameters}) async {
@@ -101,8 +92,7 @@ class OpenId extends Interceptor {
     var refreshToken = await getStorageValue(_refrshTokenField);
     Credential? credential;
     if (refreshToken == null) {
-      credential = await authenticate(client,
-          scopes: configuration.scopes, queryParameters: queryParameters);
+      credential = await authenticate(client, scopes: configuration.scopes);
     } else {
       credential = client.createCredential(refreshToken: refreshToken);
     }
@@ -141,6 +131,7 @@ class OpenId extends Interceptor {
         );
       }
     }
+    super.onError(err, handler);
   }
 
   Future<bool> _alreadyAuthenticated() async {
@@ -177,5 +168,7 @@ class OpenId extends Interceptor {
     if (token != null) {
       options.headers['Authorization'] = '$tokenType $token';
     }
+
+    super.onRequest(options, handler);
   }
 }

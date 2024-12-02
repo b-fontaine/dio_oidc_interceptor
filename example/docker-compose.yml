@@ -12,8 +12,10 @@ services:
       POSTGRES_PASSWORD: password
 
   keycloak_web:
-    image: quay.io/keycloak/keycloak:24.0.3
+    image: quay.io/keycloak/keycloak:latest
     container_name: keycloak_web
+    volumes:
+      - ./keycloak/imports:/opt/jboss/keycloak/imports
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
@@ -29,6 +31,8 @@ services:
       KC_HEALTH_ENABLED: true
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/example-cli.json
     command: start-dev
     depends_on:
       - postgres

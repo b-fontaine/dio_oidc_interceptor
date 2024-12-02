@@ -21,7 +21,7 @@ class OpenIdStub extends OpenId {
   @override
   Future<void> logout() async {
     final url = Uri.parse(
-        "https://connect.listo.pro/realms/ante-prod/.well-known/openid-configuration");
+        "http://localhost:8080/realms/master/.well-known/openid-configuration");
     try {
       final response = await httpClient.get(url);
 

@@ -13,7 +13,7 @@ Future<Credential?> authenticate(
   Map<String, String>? queryParameters,
 }) async {
   var uri = Uri.parse(window.location.href);
-  var q = queryParameters ?? uri.queryParameters;
+  var q = uri.queryParameters;
 
   AuthorizationCodeParameters? parameters;
 
@@ -106,7 +106,6 @@ Future<Credential> authenticateWithAuthorizationCode(
       refreshToken: token.refreshToken,
       expiresAt: token.expiresAt,
       expiresIn: token.expiresIn,
-      idToken: token.idToken.toCompactSerialization(),
     );
   } catch (e) {
     throw Exception('Failed to get token: $e');

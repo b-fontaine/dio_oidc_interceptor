@@ -1,4 +1,68 @@
-# Dio OIDC Interceptor
+# [EN] Dio OIDC Interceptor
+
+This project is derived from the [Listo Paye Flutter Starter Kit](https://github.com/Listo-Paye/flutter_starter_kit).
+
+For more details, refer to the [Medium article "Clean and Modular Architecture with Flutter: From Structure to Gherkin Tests"](https://medium.com/@benotfontaine/architecture-clean-et-modulaire-avec-flutter-de-la-structure-aux-tests-gherkin-879a37c0c2a5).
+
+--------
+
+## How to Run This Example Locally?
+
+### Prerequisites
+
+First, you need a Flutter-compatible IDE:
+* [Android Studio](https://developer.android.com/studio)
+* [Visual Studio Code](https://code.visualstudio.com/)
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+
+Next, you need the Flutter tools:
+* [Flutter SDK](https://flutter.dev/docs/get-started/install)
+* [Dart SDK](https://dart.dev/get-dart)
+* [Git](https://git-scm.com/)
+* [Android SDK](https://developer.android.com/studio#downloads)
+* [Xcode](https://developer.apple.com/xcode/)
+* [CocoaPods](https://cocoapods.org/)
+* [JDK 17](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
+* [Chrome](https://www.google.com/chrome/)
+
+Finally, you need Docker and Docker Compose:
+* [Docker](https://docs.docker.com/get-docker/)
+
+### Running the Example
+
+First, you need to install and start Keycloak. Run the following command from this directory:
+```bash
+docker-compose -p oidc up -d
+```
+
+You can verify the installation is working correctly by accessing the following URL: [http://localhost:8080/](http://localhost:8080/)
+* Username: `admin`
+* Password: `admin`
+
+Next, download the dependencies:
+```bash
+flutter pub get
+```
+
+Run the build_runner:
+```bash
+flutter pub run build_runner watch --delete-conflicting-outputs
+```
+
+Finally, you can start the application:
+```bash
+flutter run -d chrome -t lib/main_dev.dart
+```
+
+Of course, it is possible to run it on another device depending on your configuration. This example is designed to run on:
+- Web
+- Android
+- iOS / iPadOS
+- macOS
+- Linux
+- Windows
+
+# [FR] Dio OIDC Interceptor
 
 Ce projet est issu du [Starter Kit Flutter de Listo Paye](https://github.com/Listo-Paye/flutter_starter_kit). 
 

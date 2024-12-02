@@ -7,5 +7,14 @@ import 'configuration.dart';
 @Singleton(as: Configuration)
 class ConfigurationDev implements Configuration {
   @override
-  String get apiBaseUrl => "";
+  String get apiBaseUrl => "https://connect.domain.com/";
+
+  @override
+  String get authClientId => "";
+
+  @override
+  String get authClientSecret => "";
+
+  @override
+  String get authTokenUrl => "";
 }

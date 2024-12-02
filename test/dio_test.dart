@@ -23,7 +23,7 @@ void main() async {
     // Stubber l'appel HTTP
     final mockHttpClient = MockClient((request) async {
       if (request.url.toString() ==
-          'https://connect.listo.pro/realms/ante-prod/.well-known/openid-configuration') {
+          'http://localhost:8080/realms/master/.well-known/openid-configuration') {
         final response = {
           'end_session_endpoint': 'https://logout.url/logout',
         };
@@ -45,7 +45,7 @@ void main() async {
         clientId: 'flutter-connect',
         clientSecret: 'your_client_secret',
         uri: Uri.parse(
-            'https://connect.listo.pro/realms/ante-prod/.well-known/openid-configuration'),
+            'http://localhost:8080/realms/master/.well-known/openid-configuration'),
         scopes: ['openid', 'profile', 'email'],
       ),
       httpClient: mockHttpClient,
