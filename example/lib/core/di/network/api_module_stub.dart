@@ -6,11 +6,11 @@ import '../di_module.dart';
 
 @test
 @Singleton(as: ApiModule)
-class ApiModuleImpl implements ApiModule {
+class ApiModuleStub implements ApiModule {
   late final Dio _dio;
   late final ApiClient _client;
 
-  ApiModuleImpl(Configuration configuration) {
+  ApiModuleStub(Configuration configuration) {
     _dio = Dio()..interceptors.add(MockInterceptor(basePath: 'mocks/api'));
     _client = ApiClient(_dio, baseUrl: configuration.apiBaseUrl);
   }

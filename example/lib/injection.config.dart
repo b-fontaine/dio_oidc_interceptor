@@ -83,10 +83,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i699.LogoutModule(gh<_i887.AppRouter>()));
     gh.singleton<_i379.LoginModule>(
         () => _i379.LoginModule(gh<_i766.AppRouter>()));
-    gh.singleton<_i268.ApiModule>(
-      () => _i763.ApiModuleImpl(gh<_i268.Configuration>()),
-      registerFor: {_test},
-    );
     gh.factory<_i698.IsAuthenticatedRepository>(
         () => _i698.IsAuthenticatedRepository(gh<_i268.Authentication>()));
     gh.factory<_i74.LoginRepository>(
@@ -95,6 +91,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i45.LogoutRepository(gh<_i268.Authentication>()));
     gh.singleton<_i883.IsConnectedUseCase>(
         () => _i883.IsConnectedUseCase(gh<_i947.IsAuthenticatedRepository>()));
+    gh.singleton<_i268.ApiModule>(
+      () => _i763.ApiModuleStub(gh<_i268.Configuration>()),
+      registerFor: {_test},
+    );
     gh.singleton<_i696.LogoutUseCase>(
         () => _i696.LogoutUseCase(gh<_i947.LogoutRepository>()));
     gh.singleton<_i834.LoginUseCase>(

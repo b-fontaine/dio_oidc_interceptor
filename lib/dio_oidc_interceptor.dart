@@ -4,7 +4,6 @@ import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:openid_client/openid_client.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import 'dio_oidc_interceptor_io.dart'
     if (dart.library.html) 'dio_oidc_interceptor_browser.dart';
@@ -122,7 +121,8 @@ class OpenId extends Interceptor {
         credential = client.createCredential(refreshToken: refreshToken);
       } catch (_) {}
     }
-    if (credential != null) {
+    if (credential != null &&
+        credential.toJson()["token"]["access_token"] != null) {
       var tokens = await credential.getTokenResponse();
       if (tokens.accessToken == null) {
         await clearStorageValues();
@@ -152,13 +152,35 @@ class OpenId extends Interceptor {
   ///
   /// Invalidate the token and clear the storage
   Future<void> logout() async {
-    var accessToken = await _getStorageValue(_accessTokenField);
-    if ((accessToken ?? "").isEmpty) {
-      return;
+    final token = await _getAccessToken();
+    final tokenType = await _getStorageValue(_tokenTypeField) ?? "Bearer";
+    final refreshToken = await _getStorageValue(_refrshTokenField) ?? "";
+    BaseOptions options = BaseOptions(
+      baseUrl: Uri.base.toString(),
+      headers: {
+        "Authorization": '$tokenType $token',
+        'Content-type': 'application/x-www-form-urlencoded',
+      },
+    );
+    var dio = Dio(options);
+
+    var configUrl = "${configuration.uri}/.well-known/openid-configuration";
+    var result = await dio.get(configUrl);
+    Map<String, dynamic>? config = result.data;
+    if (config != null) {
+      var endSessionUrl = config["end_session_endpoint"] as String?;
+      if (endSessionUrl != null) {
+        var logout = await dio.post(
+          endSessionUrl,
+          data:
+              "client_id=${configuration.clientId}&client_secret=${configuration.clientSecret}&refresh_token=$refreshToken",
+        );
+        if (logout.statusCode != 204) {
+          throw Exception("Logout failed");
+        }
+        await clearStorageValues();
+      }
     }
-    var logoutUrl = "${configuration.uri}/protocol/openid-connect/logout";
-    await clearStorageValues();
-    await launchUrlString(logoutUrl, webOnlyWindowName: "_self");
   }
 
   /// Login the user
@@ -183,7 +205,7 @@ class OpenId extends Interceptor {
         credential = client.createCredential(refreshToken: refreshToken);
       } catch (_) {}
     }
-    if (credential == null) {
+    if (credential?.toJson()["token"]["access_token"] == null) {
       await clearStorageValues();
       credential = await authenticate(client, scopes: configuration.scopes);
     }
