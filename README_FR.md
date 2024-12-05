@@ -1,42 +1,41 @@
-# Flutter OIDC Interceptor for Dio
+# Intercepteur Flutter OIDC pour Dio
 
-> You can see then French version of the README file [here](./README_FR.md).
+## Qu'est-ce que l'OIDC ?
 
-## What is OIDC?
+L'OpenID Connect (OIDC) est un protocole d'authentification basé sur le protocole OAuth 2.0, conçu pour permettre aux applications de vérifier l'identité d'un utilisateur de manière sécurisée et d'obtenir des informations de profil utilisateur de base (comme le nom ou l'email) via un serveur d'autorisation. OIDC ajoute une couche d'identité à OAuth 2.0, qui se concentre uniquement sur l'autorisation, en fournissant un mécanisme standardisé pour gérer l'authentification.
 
-OpenID Connect (OIDC) is an authentication protocol built on top of OAuth 2.0. It allows applications to securely verify a user's identity and obtain basic profile information (such as name or email) through an authorization server. OIDC adds an identity layer to OAuth 2.0, which focuses solely on authorization, by providing a standardized mechanism for handling authentication.
+OIDC repose sur des JSON Web Tokens (JWT) comme format pour transmettre les données d'authentification entre les parties, garantissant une structure compacte, sécurisée, et facile à vérifier. Il définit plusieurs flux d'authentification (ou "flows"), comme le *Authorization Code Flow*, le *Implicit Flow*, et le *Hybrid Flow*, adaptés à différents scénarios d'utilisation.
 
-OIDC relies on JSON Web Tokens (JWT) as the format for transmitting authentication data between parties, ensuring a compact, secure, and easy-to-verify structure. It defines several authentication flows, such as the *Authorization Code Flow*, *Implicit Flow*, and *Hybrid Flow*, tailored to different use cases.
+### Utilité de l'OIDC
 
-### Benefits of OIDC
+1. **Authentification centralisée** : OIDC permet de centraliser l'authentification des utilisateurs via un fournisseur d'identité (Identity Provider ou IdP). Cela simplifie l'accès aux applications multiples tout en offrant une meilleure expérience utilisateur (par exemple, un SSO ou Single Sign-On).
 
-1. **Centralized Authentication**: OIDC allows user authentication to be centralized through an Identity Provider (IdP). This simplifies access to multiple applications while enhancing the user experience, for instance, via Single Sign-On (SSO).
+2. **Sécurité renforcée** : Grâce à l'usage des JWT et de normes comme HTTPS, OIDC garantit que les données échangées sont authentiques et qu'elles n'ont pas été altérées ou interceptées par des tiers malveillants.
 
-2. **Enhanced Security**: By leveraging JWTs and standards such as HTTPS, OIDC ensures that exchanged data is authentic and has not been altered or intercepted by malicious parties.
+3. **Réduction des responsabilités côté client** : En déléguant l'authentification à un fournisseur d'identité, les applications clientes (ou *relying parties*) n'ont pas à gérer directement des informations sensibles comme les mots de passe, ce qui réduit le risque de failles de sécurité.
 
-3. **Reduced Client-Side Responsibility**: By delegating authentication to an identity provider, client applications (or *relying parties*) avoid directly handling sensitive information like passwords, reducing the risk of security breaches.
+4. **Interopérabilité** : En tant que standard ouvert, OIDC est compatible avec de nombreux services et plateformes. Cela permet aux développeurs d'intégrer facilement des fonctionnalités d'authentification avec des fournisseurs populaires comme Google, Microsoft, ou Okta.
 
-4. **Interoperability**: As an open standard, OIDC is compatible with many services and platforms. This enables developers to easily integrate authentication features with popular providers like Google, Microsoft, or Okta.
+5. **Accessibilité des données utilisateur** : En plus de l'authentification, OIDC permet aux applications de récupérer des informations supplémentaires sur l'utilisateur grâce à des "claims" incluses dans le token, comme l'adresse email, le prénom ou des informations de rôle, pour personnaliser l'expérience utilisateur.
 
-5. **Access to User Data**: Beyond authentication, OIDC allows applications to retrieve additional user information via claims included in the token, such as email address, first name, or roles, to personalize the user experience.
+Pour résumer, OIDC combine l'efficacité d'OAuth 2.0 pour la gestion des autorisations avec une couche d'identité robuste, répondant aux besoins modernes de sécurité et de convivialité dans les systèmes distribués.
 
-In summary, OIDC combines OAuth 2.0's authorization capabilities with a robust identity layer, addressing modern security and usability needs in distributed systems.
+## Utilisation de l'intercepteur OIDC pour Dio
 
-## Using the OIDC Interceptor for Dio
+Pour utiliser l'intercepteur OIDC avec Dio, vous devez suivre les étapes suivantes :
 
-To use the OIDC interceptor with Dio, follow these steps:
+### Ajouter les dépendances nécessaires
 
-### Add the Required Dependencies
-
-Ensure you have the Dio and optionally Retrofit dependencies installed in your Flutter project. Add the `dio_oidc_interceptor` package to your `pubspec.yaml` file by running the following command:
+Assurez-vous d'avoir les dépendances Dio et, en option, Retrofit installées dans votre projet Flutter.
+Ajoutez le package `dio_oidc_interceptor` à votre fichier `pubspec.yaml` en exécutant la commande suivante :
 
 ```shell
 flutter pub add dio_oidc_interceptor
 ```
 
-### Configure the OIDC Interceptor
+### Configurer l'intercepteur OIDC
 
-Create an instance of `OidcInterceptor` by specifying the required OIDC configuration, such as `clientId`, `clientSecret`, the OIDC provider URI, and the required scopes. Add this interceptor to your Dio client.
+Créez une instance de `OidcInterceptor` en spécifiant la configuration OIDC requise, comme le `clientId`, le `clientSecret`, l'URI du fournisseur OIDC, et les scopes nécessaires. Ajoutez cet intercepteur à votre client Dio.
 
 ```dart
 import 'package:dio/dio.dart';
@@ -45,7 +44,7 @@ import 'package:dio_oidc_interceptor/dio_oidc_interceptor.dart';
 void main() async {
   final dio = Dio();
   final interceptor = OidcInterceptor(
-    configuration: OpenIdConfiguration(
+        configuration: OpenIdConfiguration(
       clientId: 'your-client-id',
       clientSecret: 'your-client-secret',
       uri: 'https://your-oidc-provider.com',
@@ -58,9 +57,9 @@ void main() async {
 }
 ```
 
-### Using the Interceptor with Retrofit
+### Utiliser l'intercepteur avec Retrofit
 
-If you use Retrofit to manage network calls, you can also integrate the OIDC interceptor into your service interfaces.
+Si vous utilisez Retrofit pour gérer vos appels réseau, vous pouvez également intégrer l'intercepteur OIDC dans vos interfaces de service.
 
 ```dart
 import 'package:dio/dio.dart';
@@ -94,27 +93,27 @@ class Backend {
 }
 ```
 
-### Using the Listo Starter Kit for Flutter
+### Utiliser le starter kit Listo pour Flutter
 
-You can use the Listo Starter Kit for Flutter to quickly start a project with clean architecture, configured dependency injection, and test-driven development with Gherkin.
+Vous pouvez utiliser le Starter Kit Listo pour Flutter pour démarrer rapidement un projet avec une Clean Archi, l'injection de dépendances configurée ainsi que de quoi piloter vos développements par les tests Gherkin.
 
-To do this, fork the [Listo Starter Kit](https://github.com/Listo-Paye/listo_starter_kit) project and follow the README instructions to get started.
+Pour ça, vous pouvez créer un fork du projet [Listo Starter Kit](https://github.com/Listo-Paye/listo_starter_kit) et suivre les instructions du README pour démarrer votre projet.
 
-Then, follow the example in this application to integrate the OIDC interceptor into your project.
+Ensuite, il vous suffira de suivre l'exemple de cette application pour intégrer l'intercepteur OIDC à votre projet.
 
-# Login
+# Connexion
 
-The login process follows the OpenID Connect flow. To log in, the user is redirected to the application's login page. Once authenticated, the user is redirected back to the page that initiated the login process.
+Le principe de connexion suit le processus OpenID Connect. Pour se connecter, l'utilisateur doit être redirigé vers la page de connexion de l'application. Une fois connecté, l'utilisateur est redirigé vers la page qui a lancé sa connexion.
 
-> **IMPORTANT** The protocol used is authorization_code.
+> **ATTENTION** Le protocole utilisé est l'authorization_code.
 
 ![authorization code flow](example/assets/images/authorization_code.png)
 
-## What About the Code?
+## Et dans le code ?
 
-Using the `dio_oidc_interceptor` package, clean architecture, and dependency injection, the implementation proceeds as follows:
+En utilisant le package `dio_oidc_interceptor`, la clean archi et l'injection de dépendance, je procède comme suit
 
-First, define an authentication service contract:
+Le mets en place un contrat de service d'authentification :
 
 ```dart
 abstract class Authentication {
@@ -124,7 +123,7 @@ abstract class Authentication {
 }
 ```
 
-Then, create an implementation for this contract:
+Je crée une implémentation de ce contrat :
 
 ```dart
 @dev
@@ -155,24 +154,26 @@ class AuthenticationImpl implements Authentication {
 }
 ```
 
-You may notice that refreshToke` is simply a login without parameters. Indeed, the first thing the dio_oidc_interceptor package does is check if the refresh_token is available and use it if possible. If not, it initiates a full authentication flow.
+Vous remarquerez que le refreshToken est simplement un login sans paramètres. Oui, la première chose que fait le package dio_oidc_interceptor est de vérifier si le refresh_token est disponible et de l'utiliser si possible.
+S'il n'y arrive pas, il lance une authentification complète.
 
 ## queryParameters
 
-The use of `queryParameters` is exclusive to web redirection scenarios. When a user is redirected to a login page, the page typically includes parameters in the URL. These parameters are captured by the browser and can be passed to the application. You can retrieve them as follows:
+L'utilisation de queryParameters est exclusif aux problématiques web de redirection. En effet, lorsqu'un utilisateur est redirigé vers une page de connexion, il est redirigé vers une page de connexion avec des paramètres dans l'URL. Ces paramètres sont récupérés par le navigateur et peuvent être transmis à l'application.
+Vous pouvez les récupérer ainsi :
 
 ```dart
 var queryParameters = Map.fromEntries(Uri.base.queryParameters.entries);
-if (queryParameters.containsKey("code") &&
+ if (queryParameters.containsKey("code") &&
     queryParameters.containsKey("state") &&
     queryParameters.containsKey("session_state")) {
     await authentication.login(queryParameters: queryParameters);
 }
 ```
 
-## Complete Usage Example
+## Exemple complet d'utilisation
 
-Below is an example using clean architecture and the BLoC pattern:
+Voici un exemple en utilisant la clean archi et le pattern BLoC :
 
 **BLoC**
 
@@ -293,19 +294,19 @@ class LoginView extends StatelessWidget {
 }
 ```
 
-Take note of the interactions between the view and the BLoC. When the view is initialized, the BLoC is notified of the initial event. The BLoC checks if there are parameters in the URL and uses them to log in. It then verifies if the user is logged in and notifies the view of the result.
+Il faut bien regarder les interractions entre la view et le bloc. Au démarrage de la vue, le bloc est notifié de l'événement initial. Le bloc vérifie si des paramètres sont présents dans l'URL et les utilise pour se connecter. Ensuite, il vérifie si l'utilisateur est connecté et notifie la vue du résultat.
 
-The use of streams is particularly handy for state change notifications. Every time you make a call, it updates the stream, so you don’t have to handle it manually.
+L'utilisation des Streams est particulièrement pratique pour les notifications de changement d'état. A chaque fois que vous lancez un appel, celui-ci met à jour le stream et vous n'avez pas à le traiter.
 
-These are the main files for handling login behavior. I encourage you to review the example’s source code to analyze all the details.
+Ce sont ici les principaux fichiers pour le comportement de connexion, je vous invite à regarder le code source de l'exemple pour analyser les tenants et aboutissants.
 
-# Retrofit Call and Logout
+# Appel Retrofit et déconnexion
 
-## Retrofit Call
+## Appel Retrofit
 
-Based on the [Starter Kit Listo](https://github.com/Listo-Paye/flutter_starter_kit), you first need to configure dependency injection:
+En se basant sur le [Starter Kit Listo](https://github.com/Listo-Paye/flutter_starter_kit), il faut d'abord configurer l'injection de dépendance :
 
-In `lib/core/di/network`, add the Retrofit configuration:
+Dans lib/core/di/network, ajouter la configuration retrofit :
 
 ```dart
 import 'package:dio/dio.dart';
@@ -317,9 +318,10 @@ part 'api_client.g.dart';
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 }
+
 ```
 
-Then, create an overlay for the `ApiClient` interface to add interceptors:
+Puis créer une surcouche de l'interface ApiClient pour ajouter des intercepteurs :
 
 ```dart
 import 'package:dio/dio.dart';
@@ -354,9 +356,10 @@ class ApiModuleImpl implements ApiModule {
   @override
   Dio get dio => _dio;
 }
+
 ```
 
-The reference interface allows easy creation of a stub for testing:
+L'interface de référence permet de créer facilement un Stub pour les tests :
 
 ```dart
 import 'package:dio/dio.dart';
@@ -382,9 +385,10 @@ class ApiModuleStub implements ApiModule {
   @override
   Dio get dio => _dio;
 }
+    
 ```
 
-Now, simply add your service in the configuration file:
+Voilà, il ne vous reste qu'à ajouter votre service dans le fichier de configuration :
 
 ```dart
 import 'package:dio/dio.dart';
@@ -399,25 +403,25 @@ abstract class ApiClient {
   @GET('/api/client/{clientId}/contacts')
   Future<Map<String, dynamic>> getContacts(@Path('clientId') String clientId);
 }
+
 ```
+Pour plus d'information sur l'utilisation de Retrofit, vous pouvez consulter la [documentation officielle](https://pub.dev/packages/retrofit).
 
-For more information about using Retrofit, consult the [official documentation](https://pub.dev/packages/retrofit).
+## Déconnexion
 
-## Logout
+Le package vous déconnecte en 2 étapes :
+1. Appel POST de déconnexion via le end_session_endpoint (attention, il faut que le serveur supporte cette fonctionnalité)
+2. Si l'appel POST a fonctionné, les données d'authentification sont supprimées.
 
-The package handles logout in two steps:
-1. A POST logout call to the `end_session_endpoint` (ensure the server supports this feature).
-2. If the POST call is successful, authentication data is deleted.
+### Si votre serveur ne supporte pas l'appel du end_session_endpoint en POST
 
-### If Your Server Does Not Support POST to `end_session_endpoint`
+Vous pouvez débrancher vers cette même URL (end_session_endpoint fournie dans le .well-known). Vous trouverez plus d'information dans la documentation officielle OpenID : [https://openid.net/specs/openid-connect-session-1_0.html#RPLogout](https://openid.net/specs/openid-connect-session-1_0.html#RPLogout)
 
-You can redirect to the same URL (`end_session_endpoint` provided in the `.well-known` configuration). More information can be found in the OpenID official documentation: [https://openid.net/specs/openid-connect-session-1_0.html#RPLogout](https://openid.net/specs/openid-connect-session-1_0.html#RPLogout).
+### Exemple de déconnexion
 
-### Logout Example
+Voyons comment nous gérons la déconnexion dans notre application :
 
-Here’s how logout is managed in our application:
-
-**View**
+**Vue**
 
 ```dart
 class LogoutView extends StatelessWidget {
@@ -480,4 +484,4 @@ class LogoutInteractor {
 }
 ```
 
-You’ll notice the simplicity of the logout process. It’s important to note that the logout process is backend-managed. Therefore, ensure that the backend supports this functionality.
+Vous pourrez remarquer la simplicité du processus de déconnexion. Il est important de noter que le processus de déconnexion est géré par le backend. Il est donc nécessaire de s'assurer que le backend supporte cette fonctionnalité.

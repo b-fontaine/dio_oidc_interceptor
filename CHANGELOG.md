@@ -1,3 +1,6 @@
+## 1.2.1
+* Documentation update
+
 ## 1.2.0
 * Rebuild of the package
   * Better token management
