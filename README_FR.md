@@ -107,7 +107,7 @@ Le principe de connexion suit le processus OpenID Connect. Pour se connecter, l'
 
 > **ATTENTION** Le protocole utilisé est l'authorization_code.
 
-![authorization code flow](example/assets/images/authorization_code.png)
+![authorization code flow](https://raw.githubusercontent.com/Listo-Paye/dio_oidc_interceptor/refs/heads/main/example/assets/images/authorization_code.png)
 
 ## Et dans le code ?
 

@@ -108,7 +108,7 @@ The login process follows the OpenID Connect flow. To log in, the user is redire
 
 > **IMPORTANT** The protocol used is authorization_code.
 
-![authorization code flow](example/assets/images/authorization_code.png)
+![authorization code flow](https://raw.githubusercontent.com/Listo-Paye/dio_oidc_interceptor/refs/heads/main/example/assets/images/authorization_code.png)
 
 ## What About the Code?
 
