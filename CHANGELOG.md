@@ -1,5 +1,6 @@
-## 1.2.1+1
+## 1.2.1+2
 * Documentation update
+* Fix example project (retrofit with auth)
 
 ## 1.2.0
 * Rebuild of the package

@@ -11,7 +11,7 @@ class ApiModuleImpl implements ApiModule {
   late final Dio _dio;
   late final ApiClient _client;
 
-  ApiModuleImpl(Configuration configuration) {
+  ApiModuleImpl(Authentication auth, Configuration configuration) {
     var cache = CacheOptions(
       store: MemCacheStore(),
       policy: CachePolicy.request,
@@ -19,6 +19,7 @@ class ApiModuleImpl implements ApiModule {
     );
     _dio = Dio()
       ..interceptors.addAll([
+        auth.oAuthInterceptor,
         DioCacheInterceptor(options: cache),
       ]);
     _client = ApiClient(_dio, baseUrl: configuration.apiBaseUrl);

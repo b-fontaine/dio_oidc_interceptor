@@ -105,15 +105,18 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.singleton<_i928.LogoutInteractor>(
         () => _i928.LogoutInteractor(gh<_i230.LogoutUseCase>()));
+    gh.factory<_i293.LogoutBloc>(
+        () => _i293.LogoutBloc(gh<_i928.LogoutInteractor>()));
     gh.singleton<_i268.ApiModule>(
-      () => _i1022.ApiModuleImpl(gh<_i268.Configuration>()),
+      () => _i1022.ApiModuleImpl(
+        gh<_i268.Authentication>(),
+        gh<_i268.Configuration>(),
+      ),
       registerFor: {
         _dev,
         _prod,
       },
     );
-    gh.factory<_i293.LogoutBloc>(
-        () => _i293.LogoutBloc(gh<_i928.LogoutInteractor>()));
     gh.factory<_i795.LoginBloc>(
         () => _i795.LoginBloc(gh<_i73.LoginInteractor>()));
     return this;
