@@ -32,7 +32,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
 
-      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/example-cli.json
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm.json
     command: start-dev
     depends_on:
       - postgres

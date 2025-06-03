@@ -1,3 +1,6 @@
+## 1.2.2
+* Fix login with query parameters bug
+
 ## 1.2.1+2
 * Documentation update
 * Fix example project (retrofit with auth)

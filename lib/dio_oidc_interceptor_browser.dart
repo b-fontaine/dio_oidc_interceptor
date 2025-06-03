@@ -12,12 +12,12 @@ Future<Credential?> authenticate(
   List<String> scopes = const [],
   Map<String, String>? queryParameters,
 }) async {
-  var uri = Uri.parse(window.location.href);
-  var q = uri.queryParameters;
+  var q = queryParameters;
 
   AuthorizationCodeParameters? parameters;
 
-  if (q.containsKey('state') &&
+  if (q != null &&
+      q.containsKey('state') &&
       q.containsKey('code') &&
       q.containsKey('session_state')) {
     parameters = AuthorizationCodeParameters(
