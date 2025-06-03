@@ -300,7 +300,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.2.2"
+    version: "1.2.2+1"
   dio_web_adapter:
     dependency: transitive
     description:

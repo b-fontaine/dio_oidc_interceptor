@@ -1,6 +1,6 @@
 name: dio_oidc_interceptor
 description: "Dio interceptor for OpenID Connect. This package can work with any OpenID Connect provider and any device with authorization_code protocol."
-version: 1.2.2+1
+version: 1.2.2+2
 homepage: https://github.com/Listo-Paye/dio_oidc_interceptor
 
 environment:

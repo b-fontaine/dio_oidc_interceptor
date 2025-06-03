@@ -1,4 +1,4 @@
-## 1.2.2+1
+## 1.2.2+2
 * Fix login with query parameters bug
 
 ## 1.2.1+2

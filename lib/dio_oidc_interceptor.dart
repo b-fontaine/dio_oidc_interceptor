@@ -207,7 +207,11 @@ class OpenId extends Interceptor {
     }
     if (credential?.toJson()["token"]["access_token"] == null) {
       await clearStorageValues();
-      credential = await authenticate(client, scopes: configuration.scopes);
+      credential = await authenticate(
+        client,
+        scopes: configuration.scopes,
+        queryParameters: queryParameters,
+      );
     }
     if (credential != null) {
       var tokens = await credential.getTokenResponse();
