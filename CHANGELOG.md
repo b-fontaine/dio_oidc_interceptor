@@ -1,3 +1,6 @@
+## 1.2.3
+* Add userInfo getter
+
 ## 1.2.2+2
 * Fix login with query parameters bug
 

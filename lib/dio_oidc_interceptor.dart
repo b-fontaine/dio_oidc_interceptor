@@ -2,6 +2,7 @@ library;
 
 import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
+import 'package:jwt_decoder/jwt_decoder.dart' show JwtDecoder;
 import 'package:localstorage/localstorage.dart';
 import 'package:openid_client/openid_client.dart';
 
@@ -295,5 +296,29 @@ class OpenId extends Interceptor {
     }
 
     super.onRequest(options, handler);
+  }
+
+  Future<String?> get accessToken => _getAccessToken();
+
+  Future<Map<String, dynamic>> get userInfo async {
+    var token = await _getAccessToken();
+    if (token == null) {
+      return {};
+    }
+    try {
+      var tokenType = await _getStorageValue(_tokenTypeField) ?? "Bearer";
+      var dio = Dio();
+      var result = await dio.get(
+        '${configuration.uri}/userinfo',
+        options: Options(
+          headers: {
+            "Authorization": '$tokenType $token',
+          },
+        ),
+      );
+      return result.data;
+    } catch (_) {
+      return JwtDecoder.decode(token);
+    }
   }
 }
