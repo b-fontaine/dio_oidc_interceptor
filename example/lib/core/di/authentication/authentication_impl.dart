@@ -38,4 +38,7 @@ class AuthenticationImpl implements Authentication {
 
   @override
   Future<bool> get isAuthenticated => _oAuth.isConnected;
+
+  @override
+  Future<Map<String, dynamic>> get userInfo => _oAuth.userInfo;
 }

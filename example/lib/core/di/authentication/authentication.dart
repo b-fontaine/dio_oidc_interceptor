@@ -8,4 +8,5 @@ abstract class Authentication {
   Future<void> logout();
   Future<void> refreshToken();
   Future<bool> get isAuthenticated;
+  Future<Map<String, dynamic>> get userInfo;
 }

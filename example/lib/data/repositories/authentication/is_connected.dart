@@ -8,5 +8,9 @@ class IsAuthenticatedRepository {
   @factoryMethod
   IsAuthenticatedRepository(this._authentication);
 
-  Future<bool> call() => _authentication.isAuthenticated;
+  Future<bool> call() async {
+    var userIfo = await _authentication.userInfo;
+    print(userIfo);
+    return await _authentication.isAuthenticated;
+  }
 }

@@ -34,6 +34,10 @@ class AuthenticationStub implements Authentication {
   Future<void> refreshToken() async {
     _refreshTokenCount++;
   }
+
+  @override
+  // TODO: implement userInfo
+  Future<Map<String, dynamic>> get userInfo => Future.value({});
 }
 
 class EmptyInterceptor extends Interceptor {}
