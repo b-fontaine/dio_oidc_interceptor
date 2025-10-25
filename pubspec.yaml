@@ -1,23 +1,25 @@
 name: dio_oidc_interceptor
 description: "Dio interceptor for OpenID Connect. This package can work with any OpenID Connect provider and any device with authorization_code protocol."
-version: 1.2.3
-homepage: https://github.com/Listo-Paye/dio_oidc_interceptor
+version: 1.2.4
+homepage: https://github.com/b-fontaine/dio_oidc_interceptor
 
 environment:
-  sdk: '>=3.3.3 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: ^3.9.2
+
+workspace:
+  - example
 
 dependencies:
   clock: ^1.1.2
-  dio: ^5.8.0+1
+  dio: ^5.9.0
   flutter:
     sdk: flutter
   http_mock_adapter: ^0.6.1
   localstorage: ^6.0.0
-  openid_client: ^0.4.9
+  openid_client: ^0.4.9+1
   universal_platform: ^1.1.0
-  url_launcher: ^6.3.1
-  http: ^1.4.0
+  url_launcher: ^6.3.2
+  http: ^1.5.0
   jwt_decoder: ^2.0.1
 
 dev_dependencies:

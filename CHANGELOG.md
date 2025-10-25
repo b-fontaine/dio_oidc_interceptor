@@ -1,3 +1,7 @@
+## 1.2.4
+* Update dependencies
+* Change Ownership
+
 ## 1.2.3
 * Add userInfo getter
 

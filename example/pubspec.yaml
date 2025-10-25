@@ -4,7 +4,10 @@ publish_to: 'none'
 version: 1.2.0
 
 environment:
-  sdk: ^3.5.3
+  sdk: ^3.9.2
+
+resolution: workspace
+
 dependencies:
   flutter:
     sdk: flutter
@@ -13,39 +16,39 @@ dependencies:
   dio_oidc_interceptor:
     path: ../
   cupertino_icons: ^1.0.8
-  http: ^1.2.2
-  get_it: ^8.0.2
-  injectable: ^2.5.0
-  flutter_bloc: ^8.1.6
-  dio: ^5.7.0
-  retrofit: ^4.4.1
+  http: ^1.5.0
+  get_it: ^8.2.0
+  injectable: ^2.5.2
+  flutter_bloc: ^9.1.1
+  dio: ^5.9.0
+  retrofit: ^4.7.3
   json_annotation: ^4.9.0
   flavor: ^2.0.0
-  intl: ^0.19.0
-  dio_mocked_responses: ^1.5.0+1
-  flutter_svg: ^2.0.16
-  characters: ^1.3.0
-  dio_cache_interceptor: ^3.5.0
-  dio_cache_interceptor_hive_store: ^3.2.2
+  intl: ^0.20.2
+  dio_mocked_responses: ^1.6.5
+  flutter_svg: ^2.2.1
+  characters: ^1.4.0
+  dio_cache_interceptor: ^3.5.1
+  dio_cache_interceptor_hive_store: ^4.0.0
   hive: ^2.2.3
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.1.0
   transparent_image: ^2.0.1
-  go_router: ^14.6.1
-  google_fonts: ^6.2.1
-  flutter_markdown: ^0.7.4+3
+  go_router: ^16.3.0
+  google_fonts: ^6.3.2
+  flutter_markdown: ^0.7.7+1
   flutter_highlighter: ^0.1.1
-  septeo_design_system: ^0.0.4+1
+  septeo_design_system: ^0.1.1+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
-  build_runner: ^2.4.13
-  injectable_generator: ^2.6.2
-  retrofit_generator: ^9.1.5
-  json_serializable: ^6.9.0
-  flutter_flavorizr: ^2.2.3
-  bdd_widget_test: ^1.7.4
-  freezed: ^2.5.7
+  flutter_lints: ^6.0.0
+  build_runner: ^2.10.1
+  injectable_generator: ^2.9.0
+  retrofit_generator: ^10.0.6
+  json_serializable: ^6.11.1
+  flutter_flavorizr: ^2.4.1
+  bdd_widget_test: ^2.1.2
+  freezed: ^3.2.3
   http_mock_adapter: ^0.6.1
   mocktail_image_network: ^1.2.0
 
